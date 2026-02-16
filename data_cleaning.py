@@ -81,8 +81,8 @@ print(df.shape)
 # In[8]:
 
 
-columns_require_exempt_cleaning = ['loan_to_value_ratio', 'interest_rate', 'rate_spread', 'loan_term', 'property_value',
-                                   'debt_to_income_ratio']
+columns_require_exempt_cleaning = ['loan_to_value_ratio', 'interest_rate', 'rate_spread', 'loan_term', 
+                                   'property_value', 'debt_to_income_ratio']
 for col in columns_require_exempt_cleaning:
     df = df[~df[col].astype(str).isin(['Exempt'])]
 print(df.shape)
@@ -315,7 +315,8 @@ print(df.shape)
 # In[18]:
 
 
-columns_require_regex_cleaning = ['derived_loan_product_type', 'derived_dwelling_category', 'derived_ethnicity', 'derived_race', 'derived_sex']
+columns_require_regex_cleaning = ['derived_loan_product_type', 'derived_dwelling_category', 'derived_ethnicity', 
+                                  'derived_race', 'derived_sex']
 for col in columns_require_regex_cleaning:
     df[col] = df[col].str.replace(r'[^a-zA-Z0-9\-_]', '_', regex=True)
 
@@ -489,8 +490,8 @@ print(df.head())
 # In[27]:
 
 
-df = df.dropna(subset=['county_code', 'conforming_loan_limit', 'loan_to_value_ratio', 'interest_rate', 'rate_spread', 'loan_term',
-                       'property_value', 'income', 'debt_to_income_ratio', 'applicant_age', 'co-applicant_age'])
+df = df.dropna(subset=['county_code', 'conforming_loan_limit', 'income', 'debt_to_income_ratio', 'applicant_age', 
+                       'co-applicant_age'])
 
 
 # In[28]:
