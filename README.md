@@ -2,7 +2,7 @@
 
 ## Instructions
 ### Step 1: Data Cleaning
-1. Unzip `hmda_ny_2024_data.zip` and load `state_NY.zip` to local folder
+1. Unzip `data.zip` and load `state_NY.zip` to local folder
 2. Run `data_cleaning.py` or use `data_cleaning.ipynb` in Jupyter Notebook
     * For the reason of cleaning data this way, check out `HMDA_NY_2024_data_overview.pdf`
     * We removed all features with too many rows of missing data or not relevant to our study.
