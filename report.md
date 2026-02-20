@@ -105,6 +105,16 @@ The final dataset included 216,635 rows and 123 columns.
 
 ## Exploratory Data Analysis (EDA)
 
+The Exploratory Data Analysis begins with an examination of the core financial variables to understand their statistical properties, distributional shapes, and potential implications for downstream modeling. The dataset contains 216,635 observations and 123 variables, providing a sufficiently large sample to derive reliable statistical insights while also increading the likelihood of extreme values and structural irregularities. 
+
+### 1) Core Financial Variables Distribution
+<div align="center">
+<img src="./figures/loan_amount_distribution_raw.png" width="600">
+</div>
+
+
+
+
 ## Feature engineering process and justification
 
 We divided feature engineering into two parts. The first part focuses on basic feature transformations and binary normalization. The second part involves creating additional columns that may be useful for later analysis. 
