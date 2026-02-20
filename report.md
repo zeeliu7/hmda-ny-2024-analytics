@@ -162,12 +162,19 @@ Since an individual’s deviation from local market conditions may also be infor
 
 ## Challenges faced and future recommendations
 
-* **Highly fragmented DataFrame**: Adding many new columns one-by-one lead to a fragmentation warning and slow execution speed.
-  * **Recommendation**: Create new features in a separate table and merge once, instead of repeated single-column assignments.
+### Challenges:
 
+* **The database is huge and highly fragmented DataFrame**: Many columns have tens of thousands of missing values, making it slow to run using knn alone. Adding many new columns one-by-one lead to a fragmentation warning and slow execution speed.
 
 * **Invalid ratios / values**: Ratio features and payment estimates can produce NaN/inf when inputs are missing or near zero (income, property value, rate, term).
-  * **Recommendation**: Add simple checks (e.g., require positive income/property value/term) and treat invalid cases as missing before imputation.
+
+* **missing value**:Due to privacy protection policies and other data limitations, the meaning of certain variables is not always clearly defined, and the causes of missing values vary. In some cases, missing data may result from applicants not providing the information; in other cases, the data may be structurally unavailable or not applicable to the specific application.
+
+### Recommendation:
+
+  * **Based on the applicant's basic information**: Models can be used to make simple predictions about which factors influence loan approval for applicants.
+  
+  * **Through monthly payment ratio, median deviation**: Analyze whether applicants are eligible for loans and create risk ratings for different applicants.
 
 ### Data pre-processing
 
