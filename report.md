@@ -1,15 +1,17 @@
 # Analytics of Home Mortgage Disclosure Act (HMDA) Mortgage Dataset (New York State, 2024)
 
-## Introduction and dataset description
+This document contains hyperlinks that may not be obvious in certain PDF readers.
+
+## 1. Introduction and dataset description
 
 The Home Mortgage Disclosure Act (HMDA) is a U.S. official dataset that provides comprehensive information regarding the U.S. housing mortgage market, disclosed by many financial institutions [(Source)](https://www.consumerfinance.gov/data-research/hmda/). In this project, we have analyzed the many characteristics that could affect loan application results, using the data for New York State over the year of 2024.
 Each observation represents a loan application, including borrower characteristics, loan attributes, and application outcome. The dataset contains three main categories of information: the first is basic applicant information (race, gender, age, region); the second is financial information, such as interest rates, loan amounts, and income; and the third is approval-related information and product structure variables, such as loan type and loan purpose.
 
-## Data acquisition methodology
+## 2. Data acquisition methodology
 
 The dataset was downloaded from the [HMDA data browser](https://ffiec.cfpb.gov/data-browser/data/2024?category=states) with New York State and year 2024 selected. The original dataset included 383,577 rows and 99 columns.
 
-## Cleaning and preprocessing steps
+## 3. Cleaning and preprocessing steps
 
 We referred to the explanation of data for each field according to [Public HMDA - LAR Data Fields](https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields).
 
@@ -104,7 +106,7 @@ We collected the appearance of any category listed and converted them to a boole
 
 The final dataset included 216,635 rows and 123 columns.
 
-## Exploratory Data Analysis (EDA)
+## 4. Exploratory Data Analysis (EDA)
 
 The Exploratory Data Analysis begins with an examination of the core financial variables to understand their statistical properties, distributional shapes, and potential implications for downstream modeling. The dataset contains 216,635 observations and 123 variables, providing a sufficiently large sample to derive reliable statistical insights while also increading the likelihood of extreme values and structural irregularities. 
 
@@ -172,27 +174,30 @@ Age based patterns indicate a non-linear relationship between applicant age and 
 </div>
 According to above figures, the financial relationship analysis shows strong and economically intuitive patterns between borrower characteristics and approval outcomes. First, both the scatterplots and summary statistics indicate a clear positive relationship between log_income and log_loan amount, suggesting proportional scaling consistent with underwriting standards. Approved applications cluster more densely in the higher income and higher loan region, indicating that stronger income profiles support larger borrowing capacity. The following Table 1 also confirms this pattern: approved applicants have substantially higher mean and median income (mean $\approx$ 197.9 vs. 153.5; median 130 vs. 96) compared to denied applicants. This suggests income is a key determinant of approval, consistent with credit risk assessment frameworks that prioritize repayment capacity.
 
-=== Table 1: Income & Property Characteristics (by approved) ===
 |   approved |   income_num_mean |   income_num_median |   property_value_num_mean |   property_value_num_median |
 |-----------:|------------------:|--------------------:|--------------------------:|----------------------------:|
 |          0 |            153.52 |                  96 |                    774339 |                      525000 |
 |          1 |            197.88 |                 130 |                    620680 |                      455000 |
 
+*Table 1: Income & Property Characteristics (by approved)*
+
 The relationship between property value and loan amount is even more structurally linear, reflecting collateral based lending dynamics. The log–log scatterplot shows a tight positive slope pattern, indicating that loan size scales strongly with property value. Interestingly, denied applications exhibit higher average property values (mean $\approx$ 774k vs. 621k according to Table 1), while also showing much higher average loan-to-value (LTV) ratios (mean $\approx$ 127.7% vs. 70.0%) according to the following Table 2. This suggests that denial decisions may be driven less by absolute property value and more by leverage intensity. Extremely high LTV ratios among denied applicants imply greater credit risk exposure, which likely triggers underwriting rejections despite large collateral values. Thus, leverage rather than asset size appears to be a critical risk factor.
 
-=== Table 2: Interest Rate & LTV (by approved) ===
 |   approved |   interest_rate_num_mean |   interest_rate_num_median |   ltv_num_mean |   ltv_num_median |
 |-----------:|-------------------------:|---------------------------:|---------------:|-----------------:|
 |          0 |                     7.52 |                       7.08 |         127.74 |            71.17 |
 |          1 |                     7.06 |                       6.88 |          70.03 |            75    |
 
+*Table 2: Interest Rate & LTV (by approved)*
+
 Interest rate and pricing variables further reinforce risk differentiation. Denied applications display slightly higher average interest rates (7.52% vs. 7.06%) and substantially higher average rate spreads (0.73 vs. 0.41, according to the following Table 3), suggesting that riskier borrower profiles are priced more aggressively. Debt-to-income (DTI) ratios are broadly similar across groups (both around 43% median), though the lower observation count for DTI among denied applications may indicate missing or incomplete documentation issues. Overall, the financial analysis suggests that approval is strongly associated with higher income, lower leverage (LTV), and more favorable pricing terms. Among all financial variables, LTV and income appear to exhibit the strongest structural separation between approved and denied applications, implying that capital structure risk and repayment capacity are primary drivers of lending decisions.
 
-=== Table 3: Risk Metrics (DTI & Rate Spread) (by approved) ===
 |   approved |   dti_num_mean |   dti_num_median |   rate_spread_num_mean |   rate_spread_num_median |
 |-----------:|---------------:|-----------------:|-----------------------:|-------------------------:|
 |          0 |          42.95 |               43 |                   0.73 |                     0.3  |
 |          1 |          42.81 |               43 |                   0.41 |                     0.33 |
+
+*Table 3: Risk Metrics (DTI & Rate Spread) (by approved)*
 
 ### 5) Correlation Matrix Analysis
 The following figure is the Correlation Heatmap. 
@@ -207,7 +212,7 @@ Correlations between approval and individual financial variables are relatively 
 
 The overall correlation structure suggests that approval decisions are driven by multivariate interactions rather than dominant single variable effects, supporting the need for modeling approaches capable of capturing combined financial risk dynamics.
 
-## Feature engineering process and justification
+## 5. Feature engineering process and justification
 
 We divided feature engineering into two parts. The first part focuses on basic feature transformations and binary normalization. The second part involves creating additional columns that may be useful for later analysis. 
 
@@ -239,7 +244,7 @@ $$
 
 Since an individual’s deviation from local market conditions may also be informative, we created three county-relative features: interest_rate_minus_county_median (whether the interest rate is above the county median), property_value_minus_county_median (whether the property value is above the county median), and income_minus_county_median (whether income is above the county median). These variables capture how each application compares to the typical level in its local market and support scenario-based analysis.Finally, we calculate the z-score for all values to facilitate computation.
 
-## Summary of key findings
+## 6. Summary of key findings
 
 * EDA shows strong skewness in key financial variables. Loan amount, income, property value, and interest rate are right-skewed.
 
@@ -270,11 +275,11 @@ Since an individual’s deviation from local market conditions may also be infor
 
 * **Through monthly payment ratio, median deviation**: Analyze whether applicants are eligible for loans and create risk ratings for different applicants.
 
-## Link to your GitHub repository
+## 7. Link to your GitHub repository
 
 [zeeliu7/hmda-ny-2024-analytics](https://github.com/zeeliu7/hmda-ny-2024-analytics)
 
-## Member's Contribution
+## 8. Member's Contribution
 
 * **Xiangru (Yolanda) He** was responsible for conducting the Exploratory Data Analysis (EDA) with data visualization of the project. Yolanda analyzed the distributions of key financial variables, identified skewness and extreme values, and applied appropriate transformations such as log scaling and trimming to improve interpretability. Additionally, Yolanda examined approval outcomes across financial and demographic dimensions, computed approval rates and generated grouped summary statistics comparing approved and denied applications. Yolanda also performed financial relationship analysis using log-transformed scatterplots and constructed a correlation matrix and heatmap to identify structural relationships and potential multicollinearity issues, providing analytical insights to support subsequent modeling decisions.
 * **Zhonghao Liu** proposed and downloaded the HMDA dataset. Furthermore, Liu analyzed the data distribution and appearance of NaN/Exempt data for each feature, which was outlined in `HMDA_NY_2024_data_overview.pdf`. Furthermore, Liu has coded the "Data Cleaning and Handling Inconsistencies" of the project, including removing irrelevant features, selectively dropping NA/exempt data, relabelling categorical data for one-hot encoding, and doing preparation work for the rest of the team (e.g. filling in empty entries using KNN).
