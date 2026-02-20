@@ -141,7 +141,24 @@ Since an individual’s deviation from local market conditions may also be infor
 
 ## Summary of key findings
 
+* EDA shows strong skewness in key financial variables. Loan amount, income, property value, and interest rate are right-skewed.
+
+* Approved loans tend to have higher income and lower interest rate / rate spread, while denied loans show higher leverage.
+
+* Approval rates vary by race/ethnicity/sex/age (e.g., higher for White/Asian than Black/American Indian, lower at older ages.
+
+* `debt_to_income_ratio` quantiles are centered around **36–49** (e.g., median **43**, 95th/99th **49**), indicating limited variability after filtering.
+
+* Compared with approved cases, denied cases have lower income (median **96** vs **130**) and higher interest rates (median **7.080** vs **6.875**).
+
 ## Challenges faced and future recommendations
+
+* **Highly fragmented DataFrame**: Adding many new columns one-by-one lead to a fragmentation warning and slow execution speed.
+  * **Recommendation**: Create new features in a separate table and merge once, instead of repeated single-column assignments.
+
+
+* **Invalid ratios / values**: Ratio features and payment estimates can produce NaN/inf when inputs are missing or near zero (income, property value, rate, term).
+  * **Recommendation**: Add simple checks (e.g., require positive income/property value/term) and treat invalid cases as missing before imputation.
 
 ### Data pre-processing
 
@@ -152,5 +169,7 @@ While it may be storage-efficient to store categorical data as numbers, it would
 [Placeholder](www.example.com)
 
 ## Each member’s contribution to the project
-* **Jason Zhao** Zhao was primarily responsible for data transformation and aggregation in the feature engineering section. Zhao normalized key variables, encoded categorical features, and extracted important indicators for subsequent analysis. For example, Zhao constructed columns to identify whether an application had co-applicants and whether the loan was ultimately approved. Finally, Zhao was also responsible for performing KNN imputation on data used for calculations, such as Interest_rate.
+
 * **Zhonghao Liu** proposed and downloaded the HMDA dataset. Furthermore, Liu analyzed the data distribution and appearance of NaN/Exempt data for each feature, which was outlined in `HMDA_NY_2024_data_overview.pdf`. Furthermore, Liu has coded the "Data Cleaning and Handling Inconsistencies" of the project, including removing irrelevant features, selectively dropping NA/exempt data, relabelling categorical data for one-hot encoding, and doing preparation work for the rest of the team (e.g. filling in empty entries using KNN).
+* **Zhanhang Shi** implemented key feature engineering and scaling components. Shi converted core financial fields to numeric and engineered affordability/leverage features such as loan-to-income (`loan_to_income`), equity (`equity`), and equity ratio (`equity_ratio`). Shi also estimated monthly payments (`monthly_payment_est`) and a payment-to-income proxy (`pti`) using an amortization-based formula. In addition, Shi created county-relative deviation features by subtracting county medians (e.g., for interest rate, income, and property value). Finally, Shi added z-score standardized versions of continuous variables with StandardScaler, excluding binary/flag fields, and merged these features into the final dataset.
+* **Jason Zhao** Zhao was primarily responsible for data transformation and aggregation in the feature engineering section. Zhao normalized key variables, encoded categorical features, and extracted important indicators for subsequent analysis. For example, Zhao constructed columns to identify whether an application had co-applicants and whether the loan was ultimately approved. Finally, Zhao was also responsible for performing KNN imputation on data used for calculations, such as Interest_rate.
