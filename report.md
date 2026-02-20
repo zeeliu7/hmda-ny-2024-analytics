@@ -13,7 +13,7 @@ The dataset was downloaded from the [HMDA data browser](https://ffiec.cfpb.gov/d
 
 We referred to the explanation of data for each field according to [Public HMDA - LAR Data Fields](https://ffiec.cfpb.gov/documentation/publications/loan-level-datasets/lar-data-fields).
 
-For how we have treated each of the 99 columns, including the selected data dropping and remapping, please refer to [Placeholder](www.example.com).
+For how we have treated each of the 99 columns, including the selected data dropping and remapping, please refer to [`HMDA_NY_2024_data_overview.pdf`](https://github.com/zeeliu7/hmda-ny-2024-analytics/blob/main/HMDA_NY_2024_data_overview.pdf).
 
 ### Dropping features
 
@@ -170,7 +170,7 @@ Age based patterns indicate a non-linear relationship between applicant age and 
   <img src="./figures/log_property_value_vs_log_loan_amount.png" width="350">
 
 </div>
-According to above figures, the financial relationship analysis shows strong and economically intuitive patterns between borrower characteristics and approval outcomes. First, both the scatterplots and summary statistics indicate a clear positive relationship between log_income and log_loan amount, suggesting proportional scaling consistent with underwriting standards. Approved applications cluster more densely in the higher income and higher loan region, indicating that stronger income profiles support larger borrowing capacity. The following Table 1 also confirms this pattern: approved applicants have substantially higher mean and median income (mean ≈ 197.9 vs. 153.5; median 130 vs. 96) compared to denied applicants. This suggests income is a key determinant of approval, consistent with credit risk assessment frameworks that prioritize repayment capacity.
+According to above figures, the financial relationship analysis shows strong and economically intuitive patterns between borrower characteristics and approval outcomes. First, both the scatterplots and summary statistics indicate a clear positive relationship between log_income and log_loan amount, suggesting proportional scaling consistent with underwriting standards. Approved applications cluster more densely in the higher income and higher loan region, indicating that stronger income profiles support larger borrowing capacity. The following Table 1 also confirms this pattern: approved applicants have substantially higher mean and median income (mean $\approx$ 197.9 vs. 153.5; median 130 vs. 96) compared to denied applicants. This suggests income is a key determinant of approval, consistent with credit risk assessment frameworks that prioritize repayment capacity.
 
 === Table 1: Income & Property Characteristics (by approved) ===
 |   approved |   income_num_mean |   income_num_median |   property_value_num_mean |   property_value_num_median |
@@ -178,7 +178,7 @@ According to above figures, the financial relationship analysis shows strong and
 |          0 |            153.52 |                  96 |                    774339 |                      525000 |
 |          1 |            197.88 |                 130 |                    620680 |                      455000 |
 
-The relationship between property value and loan amount is even more structurally linear, reflecting collateral based lending dynamics. The log–log scatterplot shows a tight positive slope pattern, indicating that loan size scales strongly with property value. Interestingly, denied applications exhibit higher average property values (mean ≈ 774k vs. 621k according to Table 1), while also showing much higher average loan-to-value (LTV) ratios (mean ≈ 127.7% vs. 70.0%) according to the following Table 2. This suggests that denial decisions may be driven less by absolute property value and more by leverage intensity. Extremely high LTV ratios among denied applicants imply greater credit risk exposure, which likely triggers underwriting rejections despite large collateral values. Thus, leverage rather than asset size appears to be a critical risk factor.
+The relationship between property value and loan amount is even more structurally linear, reflecting collateral based lending dynamics. The log–log scatterplot shows a tight positive slope pattern, indicating that loan size scales strongly with property value. Interestingly, denied applications exhibit higher average property values (mean $\approx$ 774k vs. 621k according to Table 1), while also showing much higher average loan-to-value (LTV) ratios (mean $\approx$ 127.7% vs. 70.0%) according to the following Table 2. This suggests that denial decisions may be driven less by absolute property value and more by leverage intensity. Extremely high LTV ratios among denied applicants imply greater credit risk exposure, which likely triggers underwriting rejections despite large collateral values. Thus, leverage rather than asset size appears to be a critical risk factor.
 
 === Table 2: Interest Rate & LTV (by approved) ===
 |   approved |   interest_rate_num_mean |   interest_rate_num_median |   ltv_num_mean |   ltv_num_median |
@@ -228,11 +228,15 @@ VA_guaranteed              4608
 RHS_or_FSA_guaranteed       299
 Name: count, dtype: int64
 ```
-Then, we construct important financial indicators such as loan to income (Loan Amount/Income), equity (Property Value − Loan Amount), and equity_ratio (Equity/Property Value) for subsequent analysis.
-formulat:
-```
-P * r * (1 + r)**n / ((1 + r)**n - 1)
-```
+Then, we construct important financial indicators such as loan to income (Loan Amount/Income), equity (Property Value - Loan Amount), and equity_ratio (Equity/Property Value) for subsequent analysis.
+
+Formulat:
+
+$$
+P \cdot r \cdot (1+r)^n / ((1+r)^n - 1)
+$$
+
+
 Since an individual’s deviation from local market conditions may also be informative, we created three county-relative features: interest_rate_minus_county_median (whether the interest rate is above the county median), property_value_minus_county_median (whether the property value is above the county median), and income_minus_county_median (whether income is above the county median). These variables capture how each application compares to the typical level in its local market and support scenario-based analysis.Finally, we calculate the z-score for all values to facilitate computation.
 
 ## Summary of key findings
@@ -251,6 +255,8 @@ Since an individual’s deviation from local market conditions may also be infor
 
 ### Challenges:
 
+* **Inconsistent exempt coding across features**: While storing categorical data as numbers is storage-efficient, exempt categories were inconsistently labelled: sometimes as the last integer in a range (e.g. `5` for a feature of 5 categories), sometimes as universal-looking but inconsistent codes (e.g. 1111, 8888), but never consistent within the same dataset. This creates extra work for data cleaners to manually cross-reference documentation to identify and drop exempt values.
+
 * **The database is huge and highly fragmented DataFrame**: Many columns have tens of thousands of missing values, making it slow to run using knn alone. Adding many new columns one-by-one lead to a fragmentation warning and slow execution speed.
 
 * **Invalid ratios / values**: Ratio features and payment estimates can produce NaN/inf when inputs are missing or near zero (income, property value, rate, term).
@@ -258,18 +264,15 @@ Since an individual’s deviation from local market conditions may also be infor
 * **missing value**:Due to privacy protection policies and other data limitations, the meaning of certain variables is not always clearly defined, and the causes of missing values vary. In some cases, missing data may result from applicants not providing the information; in other cases, the data may be structurally unavailable or not applicable to the specific application.
 
 ### Recommendation:
+* **Adopt a unified exempt code across all features**: A single, standardized code (e.g. 0) should be used to represent exempt values dataset-wide. This would allow data cleaners to drop exempt entries directly and consistently, without needing to consult documentation for each individual feature.
 
-  * **Based on the applicant's basic information**: Models can be used to make simple predictions about which factors influence loan approval for applicants.
-  
-  * **Through monthly payment ratio, median deviation**: Analyze whether applicants are eligible for loans and create risk ratings for different applicants.
+* **Based on the applicant's basic information**: Models can be used to make simple predictions about which factors influence loan approval for applicants.
 
-### Data pre-processing
-
-While it may be storage-efficient to store categorical data as numbers, it would be highly inefficient for using the last number as "Exempt". For example, if a feature had 5 categories labelled 1 through 5, the exempt category was labelled as "5". This means that in order to remove exempt data, the data cleaner need to read over the documentation in order to find the code representing exempt. It was nice to notice how certain features used universal code to represent exempt (e.g. 1111, 8888) but those were not universal even within the same dataset. It would be recommended as universal practice to use an unified code (e.g. 0) to represent exempt so data cleaners would directly drop exempt data. 
+* **Through monthly payment ratio, median deviation**: Analyze whether applicants are eligible for loans and create risk ratings for different applicants.
 
 ## Link to your GitHub repository
 
-[Placeholder](www.example.com)
+[zeeliu7/hmda-ny-2024-analytics](https://github.com/zeeliu7/hmda-ny-2024-analytics)
 
 ## Member's Contribution
 
