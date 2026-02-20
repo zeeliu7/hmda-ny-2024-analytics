@@ -118,6 +118,23 @@ The Exploratory Data Analysis begins with an examination of the core financial v
 </div>
 The distribution analysis of key financial variables reveals substantial heterogeneity, skewness, and structural patterns that directly inform preprocessing decisions. According to above figures, monetary vairables including loan amount, income and property values, exhibit pronounced right skewness in their raw form. The presence of extreme upper-tail observations is evident in both visual inspection and summary statistics. Logarithmic transformation was therefore applied to these variables to stabilize variance and improve interpretability. In log space, the distributions become more symmetric, and the heavy skewed behavior is reduced, making them more suitable for modeling frameworks that assume approximate linear relationships.
 
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+
+  <img src="./figures/interest_rate_distribution.png" width="350">
+  <img src="./figures/ltv_distribution.png" width="350">
+  <img src="./figures/ltv_distribution_trimmed.png" width="350">
+  <img src="./figures/property_value_distribution.png" width="350">
+  <img src="./figures/property_value_distribution_trimmed.png" width="350">
+  <img src="./figures/dti_distribution.png" width="350">
+
+</div>
+According to the above figures, interest rate displys moderate dispersion, with central tendencies around 6.8 - 7.5%. Unlike monetary magnitudes, it does not exhibit extreme skewness. However, differences between approved and denied groups indicate that interest rate reflects risk-based pricing mechanisms. Loan-to-value ratio and property value presents structural anomalies in raw form, including implausibly large values, which were addressed through trimming. After cleaning, LTV and property value clusters within economically plausible ranges.
+
+Debt-to-income ration shows relatively tight clustering around the lower 40% range for both approved and denied groups. The narrow distribution suggests that underwriting thresholds may constrain this variable within a regulatory band, limiting its linear explanatory power in isolation.
+
+Overall, the financial magnitude variables required transformation due to skewness, while leverage related metrics required trimming due to extreme values. These adjustments ensure statistical stability in subsequent analysis.
+
+### 2) Approval Analysis
 
 
 ## Feature engineering process and justification
