@@ -108,7 +108,7 @@ The final dataset included 216,635 rows and 123 columns.
 The Exploratory Data Analysis begins with an examination of the core financial variables to understand their statistical properties, distributional shapes, and potential implications for downstream modeling. The dataset contains 216,635 observations and 123 variables, providing a sufficiently large sample to derive reliable statistical insights while also increading the likelihood of extreme values and structural irregularities. 
 
 ### 1) Core Financial Variables Distribution
-[Loan Amount Distribution(raw)](./figures/loan_amount_distribution_raw.png)
+![Loan Amount Distribution(raw)](./figures/loan_amount_distribution_raw.png)
 
 
 
