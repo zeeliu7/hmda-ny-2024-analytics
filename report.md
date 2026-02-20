@@ -108,10 +108,15 @@ The final dataset included 216,635 rows and 123 columns.
 The Exploratory Data Analysis begins with an examination of the core financial variables to understand their statistical properties, distributional shapes, and potential implications for downstream modeling. The dataset contains 216,635 observations and 123 variables, providing a sufficiently large sample to derive reliable statistical insights while also increading the likelihood of extreme values and structural irregularities. 
 
 ### 1) Core Financial Variables Distribution
-<div align="center">
-<img src="./figures/loan_amount_distribution_raw.png" width="600">
-</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
 
+  <img src="./figures/loan_amount_distribution_raw.png" width="350">
+  <img src="./figures/loan_amount_distribution_log.png" width="350">
+  <img src="./figures/income_distribution_raw.png" width="350">
+  <img src="./figures/income_distribution_log.png" width="350">
+
+</div>
+The distribution analysis of key financial variables reveals substantial heterogeneity, skewness, and structural patterns that directly inform preprocessing decisions. According to above figures, monetary vairables including loan amount, income and property values, exhibit pronounced right skewness in their raw form. The presence of extreme upper-tail observations is evident in both visual inspection and summary statistics. Logarithmic transformation was therefore applied to these variables to stabilize variance and improve interpretability. In log space, the distributions become more symmetric, and the heavy skewed behavior is reduced, making them more suitable for modeling frameworks that assume approximate linear relationships.
 
 
 
