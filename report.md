@@ -111,26 +111,21 @@ The final dataset included 216,635 rows and 123 columns.
 The Exploratory Data Analysis begins with an examination of the core financial variables to understand their statistical properties, distributional shapes, and potential implications for downstream modeling. The dataset contains 216,635 observations and 123 variables, providing a sufficiently large sample to derive reliable statistical insights while also increading the likelihood of extreme values and structural irregularities. 
 
 ### 1) Core Financial Variables Distribution
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
 
-  <img src="./figures/loan_amount_distribution_raw.png" width="350">
-  <img src="./figures/loan_amount_distribution_log.png" width="350">
-  <img src="./figures/income_distribution_raw.png" width="350">
-  <img src="./figures/income_distribution_log.png" width="350">
+![](./figures/loan_amount_distribution_raw.png){width=350px}
+![](./figures/loan_amount_distribution_log.png){width=350px}
+![](./figures/income_distribution_raw.png){width=350px}
+![](./figures/income_distribution_log.png){width=350px}
 
-</div>
 The distribution analysis of key financial variables reveals substantial heterogeneity, skewness, and structural patterns that directly inform preprocessing decisions. According to above figures, monetary vairables including loan amount, income and property values, exhibit pronounced right skewness in their raw form. The presence of extreme upper-tail observations is evident in both visual inspection and summary statistics. Logarithmic transformation was therefore applied to these variables to stabilize variance and improve interpretability. In log space, the distributions become more symmetric, and the heavy skewed behavior is reduced, making them more suitable for modeling frameworks that assume approximate linear relationships.
 
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+![](./figures/interest_rate_distribution.png){width=350px}
+![](./figures/ltv_distribution.png){width=350px}
+![](./figures/ltv_distribution_trimmed.png){width=350px}
+![](./figures/property_value_distribution.png){width=350px}
+![](./figures/property_value_distribution_trimmed.png){width=350px}
+![](./figures/dti_distribution.png){width=350px}
 
-  <img src="./figures/interest_rate_distribution.png" width="350">
-  <img src="./figures/ltv_distribution.png" width="350">
-  <img src="./figures/ltv_distribution_trimmed.png" width="350">
-  <img src="./figures/property_value_distribution.png" width="350">
-  <img src="./figures/property_value_distribution_trimmed.png" width="350">
-  <img src="./figures/dti_distribution.png" width="350">
-
-</div>
 According to the above figures, interest rate displys moderate dispersion, with central tendencies around 6.8 - 7.5%. Unlike monetary magnitudes, it does not exhibit extreme skewness. However, differences between approved and denied groups indicate that interest rate reflects risk-based pricing mechanisms. Loan-to-value ratio and property value presents structural anomalies in raw form, including implausibly large values, which were addressed through trimming. After cleaning, LTV and property value clusters within economically plausible ranges.
 
 Debt-to-income ration shows relatively tight clustering around the lower 40% range for both approved and denied groups. The narrow distribution suggests that underwriting thresholds may constrain this variable within a regulatory band, limiting its linear explanatory power in isolation.
@@ -139,26 +134,22 @@ Overall, the financial magnitude variables required transformation due to skewne
 
 ### 2) Approval Analysis
 The dataset contains 156,349 approved applications and 53,020 denied applications, corresponding to an approval rate of approximately 75%. 
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
 
-  <img src="./figures/log_loan_amount_by_approval_status.png" width="350">
-  <img src="./figures/interest_rate_by_approval_status.png" width="350">
-  <img src="./figures/overlay_log_loan_amount_distribution.png" width="350">
+![](./figures/log_loan_amount_by_approval_status.png){width=350px}
+![](./figures/interest_rate_by_approval_status.png){width=350px}
+![](./figures/overlay_log_loan_amount_distribution.png){width=350px}
 
-</div>
 According to above figures, even after the log transformation, the boxplots indicate mild positive skewness in both approved and denied groups, with a noticeable concentration of high-value outliers in the upper tail. These extreme observations likely correspond to unusually large mortgage loans and may exert leverage in regression modeling if not handled appropriately. Importantly, the median log loan amount is higher for approved applications than for denied ones, suggesting that larger requested loan amounts are not necessarily associated with higher rejection probability; instead, approval decisions may be more closely tied to borrower creditworthiness or underwriting criteria rather than size alone.
 
 Regarding interest rates, the distributions appear moderately right skewed, particularly among approved loans, where a wider dispersion and more extreme high rate outliers are visible. The presence of several low rate outliers (near zero) may reflect special loan products, reporting anomalies, or data recording issues that warrant verification. Although median interest rates for approved and denied groups are relatively similar, the variability is greater among approved loans, potentially reflecting risk based pricing practices. Overall, while both loan amount and interest rate display skewness and heavy tails, the log transformation substantially improves the symmetry of loan amount distributions. The persistence of outliers suggests the importance of robust modeling approaches or sensitivity analysis in subsequent regression or predictive modeling steps.
 
 ### 3) Demographic Group Analysis
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
 
-  <img src="./figures/approval_rate_by_derived_race.png" width="350">
-  <img src="./figures/approval_rate_by_derived_ethnicity.png" width="350">
-  <img src="./figures/approval_rate_by_derived_sex.png" width="350">
-  <img src="./figures/approval_rate_by_applicant_age.png" width="350">
+![](./figures/approval_rate_by_derived_race.png){width=350px}
+![](./figures/approval_rate_by_derived_ethnicity.png){width=350px}
+![](./figures/approval_rate_by_derived_sex.png){width=350px}
+![](./figures/approval_rate_by_applicant_age.png){width=350px}
 
-</div>
 The demographic analysis reveals substantial variation in approval rates across racial groups. White applicants constitute the majority of observations (n = 161,135) and exhibit an approval rate of approximately 76.8%, slightly above the overall average. Asian applicants show a comparable rate (74.1%), while Black or African American applicants experience a materially lower approval rate (59.6%). Approval rates for American Indian or Alaska Native (50.9%), Native Hawaiian or Other Pacific Islander (51.4%), and applicants identifying with two or more minority races (53.4%) are also notably lower. Although smaller sample sizes characterize some minority groups, the consistent gap of roughly 15–25 percentage points relative to White applicants suggests meaningful disparities that warrant further multivariate analysis to determine whether these differences persist after controlling for financial characteristics.
 
 A similar pattern emerges in the ethnicity breakdown. Not Hispanic or Latino applicants (n = 186,000) have an approval rate of 75.6%, compared to 65.4% among Hispanic or Latino applicants, representing a gap of roughly 10 percentage points. Applicants reporting joint ethnicity show a slightly higher approval rate (76.4%), though this group is smaller in size. With respect to sex, male and female applicants exhibit nearly identical approval rates (approximately 70.9% and 70.3%, respectively), suggesting limited gender-based disparity at the aggregate level. However, applications classified as “Joint” (likely co-applicants) show a markedly higher approval rate (81.5%), potentially reflecting stronger combined income, credit profiles, or collateral strength.
@@ -166,12 +157,10 @@ A similar pattern emerges in the ethnicity breakdown. Not Hispanic or Latino app
 Age based patterns indicate a non-linear relationship between applicant age and approval probability. Younger applicants (25–34 and below 25) demonstrate the highest approval rates (82.9% and 81.4%, respectively), while approval rates gradually decline for older cohorts, reaching 64.9% among applicants above 74. Middle aged groups (35–44 and 45–54) fall between these extremes. This inverted 'U shape' pattern may reflect lifecycle income dynamics, employment stability, or underwriting considerations related to retirement and long term repayment capacity. Overall, the demographic analysis suggests observable disparities across race and ethnicity and age-related variation, underscoring the importance of conducting controlled regression analysis to distinguish structural differences from compositional effects driven by financial variables.
 
 ### 4) Financial Relationship Analysis
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
 
-  <img src="./figures/log_income_vs_log_loan_amount.png" width="350">
-  <img src="./figures/log_property_value_vs_log_loan_amount.png" width="350">
+![](./figures/log_income_vs_log_loan_amount.png){width=350px}
+![](./figures/log_property_value_vs_log_loan_amount.png){width=350px}
 
-</div>
 According to above figures, the financial relationship analysis shows strong and economically intuitive patterns between borrower characteristics and approval outcomes. First, both the scatterplots and summary statistics indicate a clear positive relationship between log_income and log_loan amount, suggesting proportional scaling consistent with underwriting standards. Approved applications cluster more densely in the higher income and higher loan region, indicating that stronger income profiles support larger borrowing capacity. The following Table 1 also confirms this pattern: approved applicants have substantially higher mean and median income (mean $\approx$ 197.9 vs. 153.5; median 130 vs. 96) compared to denied applicants. This suggests income is a key determinant of approval, consistent with credit risk assessment frameworks that prioritize repayment capacity.
 
 |   approved |   income_num_mean |   income_num_median |   property_value_num_mean |   property_value_num_median |
@@ -201,9 +190,9 @@ Interest rate and pricing variables further reinforce risk differentiation. Deni
 
 ### 5) Correlation Matrix Analysis
 The following figure is the Correlation Heatmap. 
-<div align="center">
-<img src="./figures/heatmap.png" width="600">
-</div>
+
+![](./figures/heatmap.png){width=400px}
+
 The correlation matrix highlights several key structural relationships. log_loan_amount shows moderate positive correlation with log_income (0.56) and log_property value (0.63), while log_income and log_property value exhibit a strong correlation of 0.70. These relationships reflect underlying economic capacity and wealth linkages.
 
 Interest rate and rate spread display a strong positive correlation (0.78), suggesting that these variables capture closely related pricing information. Including both in a linear model may introduce multicollinearity concerns, warranting feature selection or regularization.
